@@ -15,9 +15,47 @@ datasette install datasette-updated
 ```
 ## Usage
 
-```bash
-DATASETTE_UPDATED=$(date -Iseconds) datasette ...
+You can have a different last updated per table, database or Datasette instance. If you don't define at any level, values will fall back in that order.
+
+If you only have known static values, you can define them in the metadata:
+```json
+{
+  "plugins": {
+    "datasette-updated": {
+      "updated": "2023-12-14T23:04:42+00:00"
+    }
+  },
+  "databases": {
+    "my-database-name": {
+      "plugins": {
+        "datasette-updated": {
+          "updated": "2023-01-01T00:00:00+00:00"
+        }
+      },
+      "tables": {
+        "my-table-name": {
+          "plugins": {
+            "datasette-updated": {
+              "updated": "2020-01-01T00:00:00+00:00"
+            }
+          }
+          ...
 ```
+
+If you want to define dynamic value(s) on `datasette package` or `datasette publish`, put metadata for this plugin in the `version-note`.
+```sh
+PLUGIN_DATASETTE_UPDATED_METADATA=$(cat <<-END
+{
+  "plugins": {
+    "datasette-updated": {
+      "updated": "$(date -Iseconds)"
+    }
+  }
+}
+END && datasette publish ... --version-note="$(echo $PLUGIN_DATASETTE_UPDATED_METADATA)"
+```
+
+Combining these approaches should work, but the `metadata.yml` will always win if there is a duplicate configuration.
 
 ## Development
 

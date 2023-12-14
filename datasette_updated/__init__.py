@@ -1,10 +1,39 @@
-import os
+import json
 from datasette import hookimpl
 
 
 @hookimpl
+def startup(datasette):
+    async def inner():
+        versions_json = (
+            await datasette.client.get(datasette.urls.path("-/versions", format="json"))
+        ).json()
+
+        if versions_json.get("datasette", {}).get("note", {}):
+            try:
+                result = json.loads(versions_json["datasette"]["note"])
+
+                datasette._plugin_datasette_updated_metadata = result
+            except ValueError:
+                pass
+
+    return inner
+
+
+@hookimpl
 def get_metadata(datasette, key, database, table):
-    return {"updated": os.getenv("DATASETTE_UPDATED", "unknown")}
+    return getattr(datasette, "_plugin_datasette_updated_metadata", None) or {
+        "plugins": {"datasette-updated": {"updated": "unknown"}}
+    }
+
+
+@hookimpl
+def extra_template_vars(datasette, database, table):
+    return {
+        "updated": datasette.plugin_config(
+            "datasette-updated", database=database, table=table
+        )["updated"]
+    }
 
 
 @hookimpl
