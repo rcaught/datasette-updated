@@ -45,17 +45,14 @@ If you have known static values, you can define them in your base `metadata.(jso
 If you want to define dynamic value(s) on `datasette package` or `datasette publish`, put metadata for this plugin in `YOUR_PLUGINS_DIR/datasette-updated/metadata.json`.
 ```sh
 mkdir -p plugins/datasette-updated/ && \
-echo <<-END
-{
+echo '{
   "plugins": {
     "datasette-updated": {
-      "updated": "$(date -Iseconds)"
+      "updated": "'"$(date -Iseconds)"'"
     }
   }
-}
-END
-> plugins/datasette-updated/metadata.json
-&& datasette publish --plugins-dir=plugins ...
+}' > plugins/datasette-updated/metadata.json && \
+datasette publish --plugins-dir=plugins ...
 ```
 
 Combining static and dynamic configuration is possible, but be aware that the base `metadata.(json|yml)` will always win if there is a duplicate configuration value.
