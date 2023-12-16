@@ -5,7 +5,7 @@
 [![Tests](https://github.com/rcaught/datasette-updated/workflows/Test/badge.svg)](https://github.com/rcaught/datasette-updated/actions?query=workflow%3ATest)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/rcaught/datasette-updated/blob/main/LICENSE)
 
-Display the date your data was last updated
+Display the date your data was updated
 
 ## Installation
 
@@ -15,9 +15,9 @@ datasette install datasette-updated
 ```
 ## Usage
 
-You can have a different last updated per table, database or Datasette instance. If you don't define at any level, values will fall back in that order.
+You can have a different updated per table, database or Datasette instance. If undefined at any level, values will fall back in that order.
 
-If you only have known static values, you can define them in the metadata:
+If you have known static values, you can define them in your base `metadata.(json|yml)``:
 ```json
 {
   "plugins": {
@@ -42,9 +42,10 @@ If you only have known static values, you can define them in the metadata:
           ...
 ```
 
-If you want to define dynamic value(s) on `datasette package` or `datasette publish`, put metadata for this plugin in the `version-note`.
+If you want to define dynamic value(s) on `datasette package` or `datasette publish`, put metadata for this plugin in `YOUR_PLUGINS_DIR/datasette-updated/metadata.json`.
 ```sh
-PLUGIN_DATASETTE_UPDATED_METADATA=$(cat <<-END
+mkdir -p plugins/datasette-updated/ && \
+echo <<-END
 {
   "plugins": {
     "datasette-updated": {
@@ -52,10 +53,12 @@ PLUGIN_DATASETTE_UPDATED_METADATA=$(cat <<-END
     }
   }
 }
-END && datasette publish ... --version-note="$(echo $PLUGIN_DATASETTE_UPDATED_METADATA)"
+END
+> plugins/datasette-updated/metadata.json
+&& datasette publish --plugins-dir=plugins ...
 ```
 
-Combining these approaches should work, but the `metadata.yml` will always win if there is a duplicate configuration.
+Combining static and dynamic configuration is possible, but be aware that the base `metadata.(json|yml)` will always win if there is a duplicate configuration value.
 
 ## Development
 

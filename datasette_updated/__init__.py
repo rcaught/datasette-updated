@@ -3,28 +3,16 @@ from datasette import hookimpl
 
 
 @hookimpl
-def startup(datasette):
-    async def inner():
-        versions_json = (
-            await datasette.client.get(datasette.urls.path("-/versions", format="json"))
-        ).json()
-
-        if versions_json.get("datasette", {}).get("note", {}):
-            try:
-                result = json.loads(versions_json["datasette"]["note"])
-
-                datasette._plugin_datasette_updated_metadata = result
-            except ValueError:
-                pass
-
-    return inner
-
-
-@hookimpl
 def get_metadata(datasette, key, database, table):
-    return getattr(datasette, "_plugin_datasette_updated_metadata", None) or {
-        "plugins": {"datasette-updated": {"updated": "unknown"}}
-    }
+    try:
+        updated_file = open(
+            f"{datasette.plugins_dir}/datasette-updated.json", "r", encoding="utf8"
+        )
+
+        with updated_file:
+            return json.loads(updated_file.read())
+    except FileNotFoundError:
+        return {"plugins": {"datasette-updated": {"updated": "unknown"}}}
 
 
 @hookimpl
