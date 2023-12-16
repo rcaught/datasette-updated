@@ -1,18 +1,32 @@
-import json
+import os
 from datasette import hookimpl
+from datasette.utils import parse_metadata
 
 
 @hookimpl
 def get_metadata(datasette, key, database, table):
     try:
-        updated_file = open(
-            f"{datasette.plugins_dir}/datasette-updated/metadata.json",
-            "r",
-            encoding="utf8",
-        )
+        datasette.plugins_dir = datasette.plugins_dir or "plugins"
 
-        with updated_file:
-            return json.loads(updated_file.read())
+        candidates = []
+        for file in os.listdir(f"{datasette.plugins_dir}/datasette-updated/"):
+            for extension in (".json", ".yaml", ".yml"):
+                if file.endswith(extension):
+                    candidates.append(
+                        f"{datasette.plugins_dir}/datasette-updated/{file}"
+                    )
+
+        if len(candidates) != 0:
+            updated_file = open(
+                candidates[0],
+                "r",
+                encoding="utf8",
+            )
+
+            with updated_file:
+                return parse_metadata(updated_file.read())
+        else:
+            raise FileNotFoundError
     except FileNotFoundError:
         return {"plugins": {"datasette-updated": {"updated": "unknown"}}}
 
