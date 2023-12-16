@@ -6,7 +6,9 @@ from datasette import hookimpl
 def get_metadata(datasette, key, database, table):
     try:
         updated_file = open(
-            f"{datasette.plugins_dir}/datasette-updated.json", "r", encoding="utf8"
+            f"{datasette.plugins_dir}/datasette-updated/metadata.json",
+            "r",
+            encoding="utf8",
         )
 
         with updated_file:
