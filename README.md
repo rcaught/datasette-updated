@@ -15,7 +15,8 @@ datasette install datasette-updated
 ```
 ## Usage
 
-You can have a different updated per table, database or Datasette instance. If undefined at any level, values will fall back in that order.
+### Static configuration
+You can have a different updated value per table, database or Datasette instance. If undefined at any level, values will fall back in that order.
 
 If you have known static values, you can define them in your base `metadata.(json|yml)``:
 ```json
@@ -42,6 +43,7 @@ If you have known static values, you can define them in your base `metadata.(jso
           ...
 ```
 
+### Dynamic configuration
 If you want to define dynamic value(s) on `datasette package` or `datasette publish`, put metadata for this plugin in `YOUR_PLUGINS_DIR/datasette-updated/metadata.json`.
 ```sh
 mkdir -p plugins/datasette-updated/ && \
@@ -55,7 +57,25 @@ echo '{
 datasette publish --plugins-dir=plugins ...
 ```
 
+### Combined configuration
 Combining static and dynamic configuration is possible, but be aware that the base `metadata.(json|yml)` will always win if there is a duplicate configuration value.
+
+### Display
+The plugin will try to load a footer template that is copied from the default Datasette footer template, but with the following addition:
+
+```
+{% if updated %}&middot;
+    Updated:
+    <time
+      data-local="time-ago"
+      datetime="{{ updated }}">
+        {{ updated }}
+    </time>
+{% endif %}
+```
+
+- If you have your own custom footer template, you will need to add the above code, as your template will take precedence.
+- If you would like to change the wording or date display, create your own footer template and modify to your liking. The [javascript library this uses](https://github.com/basecamp/local_time/tree/main#example) has many configurations (just ignore the Ruby).
 
 ## Development
 
