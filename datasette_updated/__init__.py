@@ -1,6 +1,7 @@
 import os
 from datasette import hookimpl
 from datasette.utils import parse_metadata
+from deepmerge import always_merger
 
 
 @hookimpl
@@ -31,13 +32,18 @@ def get_metadata(datasette, key, database, table):
         return {"plugins": {"datasette-updated": {"updated": "unknown"}}}
 
 
+    return {
+    }
+
+
 @hookimpl
 def extra_template_vars(datasette, database, table):
-    return {
-        "updated": datasette.plugin_config(
-            "datasette-updated", database=database, table=table
-        )["updated"]
-    }
+    base_config = datasette.plugin_config("datasette-updated")
+    specific_config = datasette.plugin_config(
+        "datasette-updated", database=database, table=table
+    )
+
+    return {"datasette_updated": always_merger.merge(base_config, specific_config)}
 
 
 @hookimpl
