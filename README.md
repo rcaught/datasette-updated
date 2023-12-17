@@ -73,9 +73,10 @@ The base / instance level metadata can accept the following extra configuration 
 
   ```json
   {
-  "plugins": {
-    "datasette-updated": {
-      "time_type": "time"
+    "plugins": {
+      "datasette-updated": {
+        "time_type": "time"
+      }
     }
   }
   ```
