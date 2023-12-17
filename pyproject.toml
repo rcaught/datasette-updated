@@ -1,6 +1,6 @@
 [project]
 name = "datasette-updated"
-version = "0.1"
+version = "0.1.2"
 description = "Display the date your data was updated"
 readme = "README.md"
 authors = [{ name = "Ryan Caught", email = "rcaught@gmail.com" }]
