@@ -50,7 +50,9 @@ def db(db_and_path):
 async def test_plugin_no_config():
     datasette = Datasette(memory=True)
     assert datasette.metadata() == {
-        "plugins": {"datasette-updated": {"updated": "unknown"}}
+        "plugins": {
+            "datasette-updated": {"time_type": "time-ago", "updated": "unknown"}
+        }
     }
 
     response = await datasette.client.get(datasette.urls.instance())
@@ -198,11 +200,15 @@ async def test_plugin_dynamic_config(db_path):
     datasette = Datasette([db_path], plugins_dir="tests/plugins")
 
     assert datasette.metadata() == {
-        "plugins": {"datasette-updated": {"updated": "2023-12-01T00:00:00+00:00"}}
+        "plugins": {
+            "datasette-updated": {
+                "time_type": "time-ago",
+                "updated": "2023-12-01T00:00:00+00:00",
+            }
+        }
     }
 
     response = await datasette.client.get(datasette.urls.instance())
-    print(response.text)
     assert (
         """
     &middot;
@@ -211,6 +217,61 @@ async def test_plugin_dynamic_config(db_path):
           data-local="time-ago"
           datetime="2023-12-01T00:00:00+00:00">
             2023-12-01T00:00:00+00:00
+        </time>
+"""
+        in response.text
+    )
+
+
+@pytest.mark.asyncio
+async def test_plugin_time_type_config(db_path):
+    datasette = Datasette([db_path], metadata={"plugins": {"datasette-updated": {}}})
+
+    assert datasette.metadata() == {
+        "plugins": {
+            "datasette-updated": {
+                "time_type": "time-ago",
+                "updated": "unknown",
+            }
+        }
+    }
+
+    response = await datasette.client.get(datasette.urls.instance())
+    assert (
+        """
+    &middot;
+        Updated:
+        <time
+          data-local="time-ago"
+          datetime="unknown">
+            unknown
+        </time>
+"""
+        in response.text
+    )
+
+    datasette = Datasette(
+        [db_path], metadata={"plugins": {"datasette-updated": {"time_type": "time"}}}
+    )
+
+    assert datasette.metadata() == {
+        "plugins": {
+            "datasette-updated": {
+                "time_type": "time",
+                "updated": "unknown",
+            }
+        }
+    }
+
+    response = await datasette.client.get(datasette.urls.instance())
+    assert (
+        """
+    &middot;
+        Updated:
+        <time
+          data-local="time"
+          datetime="unknown">
+            unknown
         </time>
 """
         in response.text

@@ -25,14 +25,31 @@ def get_metadata(datasette, key, database, table):
             )
 
             with updated_file:
-                return parse_metadata(updated_file.read())
+                metadata = always_merger.merge(
+                    metadata_defaults(), parse_metadata(updated_file.read())
+                )
+
+                assert metadata["plugins"]["datasette-updated"]["time_type"] in [
+                    "time",
+                    "date",
+                    "time-ago",
+                    "time-or-date",
+                    "weekday",
+                    "weekday-or-date",
+                ]
+
+                return metadata
         else:
             raise FileNotFoundError
     except FileNotFoundError:
-        return {"plugins": {"datasette-updated": {"updated": "unknown"}}}
+        return metadata_defaults()
 
 
+def metadata_defaults():
     return {
+        "plugins": {
+            "datasette-updated": {"time_type": "time-ago", "updated": "unknown"}
+        }
     }
 
 

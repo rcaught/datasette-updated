@@ -21,7 +21,7 @@ Powered by <a href="https://datasette.io/" title="Datasette v{{ datasette_versio
     {% if datasette_updated %}&middot;
         Updated:
         <time
-          data-local="time-ago"
+          data-local="{{ datasette_updated.time_type }}"
           datetime="{{ datasette_updated.updated }}">
             {{ datasette_updated.updated }}
         </time>
