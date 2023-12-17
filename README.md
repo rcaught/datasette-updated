@@ -70,6 +70,7 @@ The base / instance level metadata can accept the following extra configuration 
   - `weekday`: ["Today", "Yesterday", or the weekday](https://github.com/basecamp/local_time/tree/main#relative-time-helpers)
   - `weekday-or-date`: ["Yesterday" or "Apr 11"](https://github.com/basecamp/local_time/tree/main#relative-time-helpers)
 
+
   ```json
   {
   "plugins": {
@@ -94,7 +95,7 @@ The plugin will try to load a footer template that is copied from the default Da
 ```
 
 - **If you have your own custom footer template, you will need to add the above code**, as your base template will take precedence.
-- Look at [local_time](https://github.com/basecamp/local_time/tree/main#example) for configuration options (just ignore the Ruby parts).
+- Look at [local_time](https://github.com/basecamp/local_time/tree/main#example) for extra configuration options (just ignore the Ruby parts).
 
 ## Screenshot and Demo
 ![screenshot](screenshot.png?raw=true)
