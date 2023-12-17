@@ -12,7 +12,7 @@ def get_metadata(datasette, key, database, table):
         candidates = []
         for file in os.listdir(f"{datasette.plugins_dir}/datasette-updated/"):
             for extension in (".json", ".yaml", ".yml"):
-                if file.endswith(extension):
+                if file.startswith("metadata.") and file.endswith(extension):
                     candidates.append(
                         f"{datasette.plugins_dir}/datasette-updated/{file}"
                     )
