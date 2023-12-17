@@ -14,11 +14,10 @@ Install this plugin in the same environment as Datasette.
 datasette install datasette-updated
 ```
 ## Usage
+You can have a different updated value per table, database or Datasette instance. If undefined at any level, values will fall back in that order. If no value is set, updated will be `unknown`.
 
-### Static configuration
-You can have a different updated value per table, database or Datasette instance. If undefined at any level, values will fall back in that order.
-
-If you have known static values, you can define them in your base `metadata.(json|yml)``:
+### Base metadata configuration
+If you have known values, you can define them in your base `metadata.(json|yml)`:
 ```json
 {
   "plugins": {
@@ -43,8 +42,8 @@ If you have known static values, you can define them in your base `metadata.(jso
           ...
 ```
 
-### Dynamic configuration
-If you want to define dynamic value(s) on `datasette package` or `datasette publish`, put metadata for this plugin in `YOUR_PLUGINS_DIR/datasette-updated/metadata.json`.
+### Plugin metadata configuration
+If you want to define more dynamic value(s) on `datasette package` or `datasette publish`, put metadata for this plugin in `YOUR_PLUGINS_DIR/datasette-updated/metadata.(json|yml)`. The following is an example that sets updated to the current date/time.
 ```sh
 mkdir -p plugins/datasette-updated/ && \
 echo '{
@@ -57,8 +56,8 @@ echo '{
 datasette publish --plugins-dir=plugins ...
 ```
 
-### Combined configuration
-Combining static and dynamic configuration is possible, but be aware that the base `metadata.(json|yml)` will always win if there is a duplicate configuration value.
+### Combined metadata configuration
+You can combine base metadata and plugin metadata configuration, but be aware that the base `metadata.(json|yml)` will always win if there is a duplicate configuration value.
 
 ### Display
 The plugin will try to load a footer template that is copied from the default Datasette footer template, but with the following addition:
@@ -74,8 +73,13 @@ The plugin will try to load a footer template that is copied from the default Da
 {% endif %}
 ```
 
-- If you have your own custom footer template, you will need to add the above code, as your template will take precedence.
-- If you would like to change the wording or date display, create your own footer template and modify to your liking. The [javascript library this uses](https://github.com/basecamp/local_time/tree/main#example) has many configurations (just ignore the Ruby).
+- **If you have your own custom footer template, you will need to add the above code**, as your base template will take precedence.
+- If you would like to change the wording or date display, create your own footer template and modify to your liking. The [javascript/coffescript library this project uses](https://github.com/basecamp/local_time/tree/main#example) has many configurations (just ignore the Ruby parts).
+
+## Screenshot and Demo
+![screenshot](screenshot.png?raw=true)
+- Example site: https://querydata.io/
+- The Javascript component converts time elements from UTC to the browser's local time.
 
 ## Development
 
