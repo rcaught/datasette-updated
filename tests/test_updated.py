@@ -16,7 +16,7 @@ async def test_plugin_is_installed():
 def db_and_path(tmpdir):
     path = str(tmpdir / "data.db")
     db = sqlite_utils.Database(path)
-    db["cities"].insert_all(
+    db.table("cities").insert_all(
         [
             {
                 "id": "nyc",
