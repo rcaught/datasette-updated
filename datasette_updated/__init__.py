@@ -67,8 +67,8 @@ def extra_template_vars(datasette, database, table):
 def extra_js_urls():
     return [
         {
-            "url": "https://cdn.jsdelivr.net/npm/local-time@2.1.0/app/assets/javascripts/local-time.min.js",
-            "sri": "sha384-vjSE5N9a5zc42mPRxkfhAoktbmiiZ6AIEk0mEJxR3w9SWxQdzLTQx8Y+FubMepSl",
+            "url": "https://cdn.jsdelivr.net/npm/local-time@3.0.2/app/assets/javascripts/local-time.es2017-umd.js",
+            "sri": "sha384-l4PZDWQdg3uX/iY4bmkakiAYpcvOOarVJY77JwQ7edY2+c2IdUro71pKH2029xvq",
         }
     ]
 
