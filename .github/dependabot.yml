@@ -1,0 +1,14 @@
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: daily
+      time: "14:00"
+      timezone: "Australia/Brisbane"
+  - package-ecosystem: github-actions
+    directory: /.github/workflows
+    schedule:
+      interval: daily
+      time: "14:00"
+      timezone: "Australia/Brisbane"
