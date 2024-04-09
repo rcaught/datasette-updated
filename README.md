@@ -53,7 +53,7 @@ echo '{
     }
   }
 }' > plugins/datasette-updated/metadata.json && \
-datasette publish --plugins-dir=plugins ...
+datasette publish --plugins-dir=plugins --install=datasette-updated ...
 ```
 
 ### Combined metadata configuration
@@ -99,7 +99,7 @@ The plugin will try to load a footer template that is copied from the default Da
 - Look at [local_time](https://github.com/basecamp/local_time/tree/main#example) for extra configuration options (just ignore the Ruby parts).
 
 ## Screenshot and Demo
-![screenshot](screenshot.png?raw=true)
+![screenshot](https://github.com/rcaught/datasette-updated/raw/master/screenshot.png)
 - Example site: https://querydata.io/
 - The Javascript component converts time elements from UTC to the browser's local time.
 
